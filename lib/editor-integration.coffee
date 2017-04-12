@@ -45,18 +45,18 @@ class EditorIntegration
         @subscriptions.add @gdb.breaks.observe @_breakpointCreated
 
         @subscriptions.add atom.commands.add 'atom-text-editor',
-            'atom-gdb-debugger:toggle-breakpoint': @_toggleBreakpoint
-            'atom-gdb-debugger:context-watch-expression': @_ctxWatchExpr
+            'platformio-ide-debugger:toggle-breakpoint': @_toggleBreakpoint
+            'platformio-ide-debugger:context-watch-expression': @_ctxWatchExpr
 
         @subscriptions.add atom.workspace.observeTextEditors @_hookEditor
 
         @subscriptions.add atom.contextMenu.add
             'atom-text-editor': [{
                 label: "Toggle Breakpoint"
-                command: "atom-gdb-debugger:toggle-breakpoint"
+                command: "platformio-ide-debugger:toggle-breakpoint"
                 created: (ev) => @ctxEvent = ev
             }, {
-                command: "atom-gdb-debugger:context-watch-expression"
+                command: "platformio-ide-debugger:context-watch-expression"
                 shouldDisplay: (ev) =>
                     @ctxEvent = ev
                     cident = cidentFromMouse ev
@@ -64,6 +64,9 @@ class EditorIntegration
                 created: (ev) ->
                     @label = "Watch '#{cidentFromMouse ev}'"
             }]
+
+    destroy: ->
+        @subscriptions?.dispose()
 
     _ctxWatchExpr: (ev) =>
         @gdb.vars.add(cidentFromMouse(@ctxEvent))
@@ -80,10 +83,11 @@ class EditorIntegration
         @gdb.breaks.toggle(file, row+1)
 
     _frameChanged: (frame) =>
+        console.log('_frameChanged', frame)
         if @mark? then @mark.destroy()
         @mark = null
         if not frame? then return
-        if not frame.fullname?
+        if not frame.fullname? and '?' not in frame.func
             atom.notifications.addWarning "Debug info not available",
                 description: "This may be because the function is part of an
                 external library, or the binary was compiled without debug

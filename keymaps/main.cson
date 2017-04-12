@@ -7,12 +7,12 @@
 
 # For more detailed documentation see
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth
+
 'atom-workspace':
-  'f12': 'atom-gdb-debugger:connect'
-  'f5': 'atom-gdb-debugger:continue'
-  'shift-f5': 'atom-gdb-debugger:interrupt'
-  'f10': 'atom-gdb-debugger:next'
-  'f11': 'atom-gdb-debugger:step'
-  'shift-f11': 'atom-gdb-debugger:finish'
+  'f5': 'platformio-ide-debugger:continue'
+  'shift-f5': 'platformio-ide-debugger:interrupt'
+  'f10': 'platformio-ide-debugger:next'
+  'f11': 'platformio-ide-debugger:step'
+  'shift-f11': 'platformio-ide-debugger:finish'
 'atom-text-editor':
-  'f9': 'atom-gdb-debugger:toggle-breakpoint'
+  'f9': 'platformio-ide-debugger:toggle-breakpoint'

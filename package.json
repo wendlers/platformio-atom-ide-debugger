@@ -1,9 +1,10 @@
 {
-  "name": "atom-gdb-debugger",
-  "main": "./lib/atom-gdb-debugger",
+  "name": "platformio-ide-debugger",
+  "main": "./lib/main",
   "version": "0.2.2",
-  "description": "GDB integration for Atom",
+  "description": "A debugging front-end for PlatformIO IDE",
   "keywords": [
+    "platformio",
     "gdb",
     "debug",
     "debugger",
@@ -11,16 +12,18 @@
     "c++",
     "embedded"
   ],
-  "activationCommands": {
-    "atom-workspace": [
-      "atom-gdb-debugger:connect",
-      "atom-gdb-debugger:configure"
-    ]
-  },
-  "repository": "https://github.com/gsmcmullin/atom-gdb-debugger",
+  "repository": "https://github.com/platformio/platformio-atom-ide-debug.git",
   "license": "GPL-3.0+",
   "engines": {
     "atom": ">=1.13.0 <2.0.0"
+  },
+  "providedServices": {
+    "platformioIDEDebugger": {
+      "description": "Provides debugging support for PlatformIO IDE",
+      "versions": {
+        "1.0.0": "provideDebugger"
+      }
+    }
   },
   "consumedServices": {
     "status-bar": {
@@ -31,8 +34,6 @@
   },
   "dependencies": {
     "atom-space-pen-views": "~2.2.0",
-    "event-kit": "^2.2.0",
-    "node-gdb": "0.0.5",
     "underscore": "^1.8.3"
   }
 }

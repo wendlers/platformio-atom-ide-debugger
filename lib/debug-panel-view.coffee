@@ -21,7 +21,7 @@ class SubPanel extends View
 module.exports =
 class DebugPanelView extends View
     @content: (gdb) ->
-        @div =>
+        @div class: 'debug-panel', =>
             @subview 'toolbar', new GdbToolbarView(gdb)
             @subview 'watch', new SubPanel 'Watch Variables', new VarWatchView(gdb)
             @subview 'breakpoints', new SubPanel 'Breakpoints', new BreakListView(gdb)

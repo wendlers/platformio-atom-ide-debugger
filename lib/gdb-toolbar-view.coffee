@@ -1,13 +1,11 @@
 {View, $} = require 'atom-space-pen-views'
-ConfigView = require './config-view'
 
 module.exports =
 class GdbToolbarView extends View
     @cmdMask:
-        'DISCONNECTED': ['connect', 'configure']
-        'EXITED': ['connect', 'configure', 'continue']
-        'STOPPED': ['connect', 'configure', 'continue', 'next', 'step', 'finish']
-        'RUNNING': ['connect', 'configure', 'interrupt']
+        'EXITED': ['disconnect', 'continue']
+        'STOPPED': ['disconnect', 'continue', 'next', 'step', 'finish', 'toggle-cli']
+        'RUNNING': ['disconnect', 'interrupt', 'toggle-cli']
 
     initialize: (gdb) ->
         @gdb = gdb
@@ -15,38 +13,27 @@ class GdbToolbarView extends View
         for button in @find('button')
             cmd = button.getAttribute 'command'
             this[cmd] = $(button)
-            if cmd == 'connect' then continue
             button.addEventListener 'click', @do
 
     @content: ->
         @div class: 'btn-toolbar', =>
             @div class: 'btn-group', =>
-                @button class: 'btn icon icon-plug', command: 'connect', click: 'toggleConnect'
-                @button class: 'btn icon icon-tools', command: 'configure'
+                @button class: 'btn btn-error icon icon-primitive-square', command: 'disconnect', title: 'Stop / Terminate'
+                @button class: 'btn icon icon-playback-play', command: 'continue', title: 'Resume'
+                @button class: 'btn icon icon-playback-pause', command: 'interrupt', title: 'Suspend'
             @div class: 'btn-group', =>
-                @button class: 'btn icon icon-playback-play', command: 'continue'
-                @button class: 'btn icon icon-playback-pause', command: 'interrupt'
-            @div class: 'btn-group', =>
-                @button 'Next', class: 'btn', command: 'next'
-                @button 'Step', class: 'btn', command: 'step'
-                @button 'Finish', class: 'btn', command: 'finish'
+                @button class: 'btn icon icon-move-right', command: 'next', title: 'Step Over'
+                @button class: 'btn icon icon-move-down', command: 'step', title: 'Step Into'
+                @button class: 'btn icon icon-move-up', command: 'finish', title: 'Step Return'
+
+            @button class: 'btn icon icon-terminal', command: 'toggle-cli', title: 'Debug console'
 
     do: (ev) ->
         command = ev.target.getAttribute 'command'
-        atom.commands.dispatch atom.views.getView(atom.workspace), "atom-gdb-debugger:#{command}"
-
-    toggleConnect: ->
-        if @connect.hasClass 'selected'
-            atom.commands.dispatch atom.views.getView(atom.workspace), "atom-gdb-debugger:disconnect"
-        else
-            atom.commands.dispatch atom.views.getView(atom.workspace), "atom-gdb-debugger:connect"
+        atom.commands.dispatch atom.views.getView(atom.workspace), "platformio-ide-debugger:#{command}"
 
     _onStateChanged: ([state, frame]) ->
-        if state == 'DISCONNECTED'
-            @connect.removeClass 'selected'
-        else
-            @connect.addClass 'selected'
-
+        return if state not in GdbToolbarView.cmdMask
         enabledCmds = GdbToolbarView.cmdMask[state]
         for button in @find('button')
             if button.getAttribute('command') in enabledCmds

@@ -5,9 +5,6 @@
 @import "ui-variables";
 @import "octicon-utf-codes.less";
 
-.atom-gdb-debugger {
-}
-
 .state-display {
     display:inline-block;
     float:right;
@@ -23,12 +20,10 @@
     height: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
-	font-size: @font-size;
     pre, code {
         background: transparent;
         padding: 0;
         white-space: pre-wrap;
-		font-size: inherit;
     }
     .gdb-cli-input {
         white-space: nowrap;
@@ -51,7 +46,7 @@
     }
 
     .line-number.gdb-bkpt .icon-right {
-    visibility: visible;
+      visibility: visible;
 
         &:before {
             content: @stop;
@@ -147,6 +142,14 @@ td span.delete::before {
 
 #backtrace .locals {
     font-family: monospace;
+}
+
+.debug-panel {
+
+  .btn-toolbar {
+    padding: 9px 0 8px 0;
+  }
+
 }
 
 .debug-subpanel {
