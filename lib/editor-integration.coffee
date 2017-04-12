@@ -83,11 +83,11 @@ class EditorIntegration
         @gdb.breaks.toggle(file, row+1)
 
     _frameChanged: (frame) =>
-        console.log('_frameChanged', frame)
         if @mark? then @mark.destroy()
         @mark = null
         if not frame? then return
-        if not frame.fullname? and '?' not in frame.func
+        if not frame.fullname?
+            return if '?' in frame.func
             atom.notifications.addWarning "Debug info not available",
                 description: "This may be because the function is part of an
                 external library, or the binary was compiled without debug
