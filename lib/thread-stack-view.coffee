@@ -19,7 +19,7 @@ class ThreadStackView extends View
                 for thread in threads
                     @li class: 'list-nested-item collapsed', 'thread-id': thread.id, =>
                         @div class: 'list-item', =>
-                            @span thread['target-id']
+                            @span 'Thread #' + thread['id']
         if selected?
             view.find("li[thread-id=#{selected}]").addClass 'selected'
         view.find("li>div").on 'click', (ev) =>
