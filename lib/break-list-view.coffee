@@ -1,4 +1,5 @@
 {View, $$} = require 'atom-space-pen-views'
+path = require 'path'
 
 class BreakView extends View
     initialize: (@bkpt) ->
@@ -11,14 +12,15 @@ class BreakView extends View
             @td class: 'expand-column', =>
                 @span outlet: 'what'
                 @span ' '
-                @span '0', outlet: 'times', class: 'badge'
+                @span '0', outlet: 'times', class: 'badge badge-small'
             @td style: 'width: 100%'
             @td click: '_remove', =>
                 @span class: 'delete'
 
     update: ->
         {func, file, line, times} = @bkpt
-        @what.text "in #{func} () at #{file}:#{line}"
+        @what.text "in #{func} at #{path.basename(file)}:#{line}"
+        @what.attr 'title', "in #{func} at #{file}:#{line}"
         if @times.text() != times
             @times.addClass 'badge-info'
         @times.text times

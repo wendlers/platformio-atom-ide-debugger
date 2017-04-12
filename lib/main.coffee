@@ -35,7 +35,7 @@ module.exports = PlatformIOIDEDebugger =
 
         @subscriptions = new CompositeDisposable
         @subscriptions.add atom.commands.add 'atom-workspace',
-            'platformio-ide-debugger:disconnect': => @deactivate()
+            'platformio-ide-debugger:disconnect': => @stop()
             'platformio-ide-debugger:continue': => @cmdWrap => @gdb.exec.continue()
             'platformio-ide-debugger:interrupt': => @cmdWrap => @gdb.exec.interrupt()
             'platformio-ide-debugger:next': => @cmdWrap => @gdb.exec.next()
@@ -49,8 +49,6 @@ module.exports = PlatformIOIDEDebugger =
         @gdb.connect(config.gdb_executable)
         .then =>
             @gdb.set 'confirm', 'off'
-        .then =>
-            @gdb.setCwd atom.project.getPaths()[0]
         .then =>
             @gdb.setFile config.path
         .then =>
@@ -77,7 +75,6 @@ module.exports = PlatformIOIDEDebugger =
       this[visibleFlag] = panel.isVisible()
 
     stop: ->
-        @gdb?.disconnect()
         @panelSize = @panel?.getItem().size()
         @cliSize = @cliPanel?.getItem().size()
         @editorIntegration?.destroy()
@@ -86,11 +83,15 @@ module.exports = PlatformIOIDEDebugger =
         @statusBarTile?.destroy()
         @subscriptions?.dispose()
         if @gdb
+            @gdb.disconnect()
+            @gdb.destroy()
             @gdb = null
             @provider.emit 'stop'
 
     deactivate: ->
         @stop()
+        @provider.dispose()
+        @statusBar = null;
 
     consumeStatusBar: (statusBar) ->
         @statusBar = statusBar

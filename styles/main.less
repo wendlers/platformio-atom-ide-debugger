@@ -116,6 +116,8 @@ td span.delete::before {
     position: relative;
     width: 100%;
     height: 100%;
+    overflow-y: auto;
+
     .gdb-resize-grip {
         position: absolute;
         z-index: 1000;
@@ -179,7 +181,7 @@ td span.delete::before {
 #break-list {
     width: 100%;
     line-height: 2em;
-    td.func {
-        padding-left: 2em;
+    td.expand-column {
+        padding-left: 0;
     }
 }

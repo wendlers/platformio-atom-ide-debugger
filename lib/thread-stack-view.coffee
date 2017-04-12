@@ -41,7 +41,7 @@ class ThreadStackView extends View
             @ul class: 'list-tree', =>
                 for frame in frames
                     @li class: 'list-nested-item collapsed', 'frame-id': frame.level, =>
-                        @div class: 'list-item', =>
+                        @div class: 'list-item', title: formatFrame(frame, true), =>
                             @span formatFrame(frame)
         if selected?
             view.find("li[frame-id=#{selected}]").addClass 'selected'
