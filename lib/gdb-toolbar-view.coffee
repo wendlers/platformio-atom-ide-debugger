@@ -3,6 +3,7 @@
 module.exports =
 class GdbToolbarView extends View
     @cmdMask:
+        'DISCONNECTED': []
         'EXITED': ['disconnect', 'continue']
         'STOPPED': ['disconnect', 'continue', 'next', 'step', 'finish', 'toggle-cli']
         'RUNNING': ['disconnect', 'interrupt', 'toggle-cli']
@@ -33,7 +34,6 @@ class GdbToolbarView extends View
         atom.commands.dispatch atom.views.getView(atom.workspace), "platformio-ide-debugger:#{command}"
 
     _onStateChanged: ([state, frame]) ->
-        return if state not in GdbToolbarView.cmdMask
         enabledCmds = GdbToolbarView.cmdMask[state]
         for button in @find('button')
             if button.getAttribute('command') in enabledCmds
