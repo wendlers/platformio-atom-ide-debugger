@@ -1,4 +1,4 @@
-## 0.3.0 - PlatformIO
+## 1.0.0 - PlatformIO
 
 * Provide API for PlatformIO IDE
 * Refactor UI
