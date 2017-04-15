@@ -28,14 +28,15 @@ class ExecState
         @emitter.on 'state-changed', cb
 
     start: ->
-        @gdb.breaks.insert 'main', temp: true
-        .then =>
-            @gdb.send_mi '-exec-run'
+        @gdb.send_mi '-exec-run'
+        .catch (err) =>
+            if err.toString().indexOf('target does not support "run"') != -1
+                @gdb.send_mi '-exec-continue'
 
     # Resume execution.
     continue: ->
         if @state == 'EXITED'
-            @gdb.send_mi '-exec-run'
+            @start
         else
             @gdb.send_mi '-exec-continue'
 

@@ -57,7 +57,7 @@ module.exports = PlatformIOIDEDebugger =
             if @panelVisible then @panel.show()
             if @cliVisible then @cliPanel.show()
         .then =>
-            @gdb.exec.continue()
+            @gdb.exec.start()
         .catch (err) =>
             x = atom.notifications.addError 'Error launching GDB',
                 description: err.toString()
