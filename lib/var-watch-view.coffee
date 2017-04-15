@@ -48,7 +48,7 @@ class VarItemView extends View
                 @span item.exp,
                     style: "margin-left: #{item.nest}em"
                 @span ' '
-                @span '0', class: 'badge'
+                @span '0', class: 'badge badge-small', title: 'Hits'
             if +item.numchild == 0
                 @td =>
                     @input

@@ -12,7 +12,7 @@ class BreakView extends View
             @td class: 'expand-column', =>
                 @span outlet: 'what'
                 @span ' '
-                @span '0', outlet: 'times', class: 'badge badge-small'
+                @span '0', outlet: 'times', class: 'badge badge-small', title: 'Hits'
             @td style: 'width: 100%'
             @td click: '_remove', =>
                 @span class: 'delete'
