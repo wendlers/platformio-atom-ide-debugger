@@ -50,7 +50,7 @@ class ExecState
 
     # Attempt to interrupt the running target.
     interrupt: ->
-        t = setTimeout (=> @gdb.child.kill 'SIGINT'), 100
+        t = setTimeout (=> @gdb.child?.kill 'SIGINT'), 100
         @gdb.send_mi '-exec-interrupt'
         .then ->
             clearTimeout t
