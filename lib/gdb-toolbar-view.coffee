@@ -22,10 +22,11 @@ class GdbToolbarView extends View
                 @button class: 'btn btn-error icon icon-primitive-square', command: 'disconnect', title: 'Stop / Terminate'
                 @button class: 'btn icon icon-playback-play', command: 'continue', title: 'Resume'
                 @button class: 'btn icon icon-playback-pause', command: 'interrupt', title: 'Suspend'
+                
             @div class: 'btn-group', =>
-                @button class: 'btn icon icon-move-right', command: 'next', title: 'Step Over'
-                @button class: 'btn icon icon-move-down', command: 'step', title: 'Step Into'
-                @button class: 'btn icon icon-move-up', command: 'finish', title: 'Step Return'
+                @button class: 'btn btn-primary icon icon-move-right', command: 'next', title: 'Step Over'
+                @button class: 'btn btn-primary icon icon-move-down', command: 'step', title: 'Step Into'
+                @button class: 'btn btn-primary icon icon-move-up', command: 'finish', title: 'Step Return'
 
             @button class: 'btn icon icon-terminal', command: 'toggle-cli', title: 'Debug console'
 
