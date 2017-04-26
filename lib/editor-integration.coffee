@@ -32,6 +32,8 @@ decorate = (file, line, decoration) ->
     .then (editor) ->
         mark = editor.markBufferPosition([line, 1])
         editor.decorateMarker mark, decoration
+        if decoration.class == 'gdb-frame'
+            editor.decorateMarker mark, type: 'line-number', class: 'gdb-frame'
         mark
 
 module.exports =

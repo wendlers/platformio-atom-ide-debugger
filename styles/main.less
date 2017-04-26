@@ -41,17 +41,27 @@
 }
 
 .atom-text-editor, :host, atom-text-editor, atom-text-editor.editor {
-    .line.gdb-frame {
-        background: @background-color-highlight;
-    }
+  .line.gdb-frame {
+    border-radius: @component-border-radius;
+    background: fade(@background-color-warning, 20%);
+  }
 
-    .line-number.gdb-bkpt .icon-right {
-      visibility: visible;
-
-        &:before {
-            content: @stop;
-            color: @text-color-highlight;
-        }
+  .line-number.gdb-frame {
+		position: relative;
+		color: @text-color-warning;
+		overflow: hidden;
+		border-radius: @component-border-radius;
+		&:after {
+			content: "";
+			position: absolute;
+			top: 50%;
+			right: 0px;
+			margin-top: -100px;
+			border-left: 100px solid fade(@background-color-warning, 50%);
+			border-top: 100px solid transparent;
+			border-bottom: 100px solid transparent;
+		}
+	}
     }
 }
 
