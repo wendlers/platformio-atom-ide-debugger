@@ -62,7 +62,16 @@
 			border-bottom: 100px solid transparent;
 		}
 	}
+
+  .line-number.gdb-bkpt .icon-right {
+    visibility: visible;
+
+    &:before {
+      content: @stop;
+      color: @text-color-error;
+      font-weight: bold;
     }
+  }
 }
 
 table {
