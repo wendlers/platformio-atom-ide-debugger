@@ -68,6 +68,7 @@ class EditorIntegration
             }]
 
     destroy: ->
+        if @mark? then @mark.destroy()
         @subscriptions?.dispose()
 
     _ctxWatchExpr: (ev) =>
