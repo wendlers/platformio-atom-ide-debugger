@@ -55,13 +55,15 @@ class GDB
     # Spawn the GDB child process, and set up with our config.
     #
     # @return [Promise] resolves when GDB is running.
-    connect: (command) ->
+    connect: (command, args) ->
         if command? then @command = command
+        if not args then args = []
+        args = args.concat(['--interpreter=mi', '-nx'])
         (@child?.kill() or Promise.resolve())
         .then =>
             bufferedProcess
                 command: @command
-                args: ['-n', '--interpreter=mi']
+                args: args
                 stdout: @_line_output_handler.bind(this)
                 exit: @_child_exited.bind(this)
         .then (@child) =>
@@ -91,6 +93,7 @@ class GDB
             when 'OUTPUT' then @emitter.emit 'console-output', [r.cls, r.cstring]
             when 'ASYNC' then @_async_record_handler r.cls, r.rcls, r.results
             when 'RESULT' then @_result_record_handler r.cls, r.results
+
     # @private
     _async_record_handler: (cls, rcls, results) ->
         signal = 'async-' + cls.toLowerCase()

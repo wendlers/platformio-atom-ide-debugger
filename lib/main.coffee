@@ -46,20 +46,21 @@ module.exports = PlatformIOIDEDebugger =
 
         @editorIntegration = new EditorIntegration(@gdb)
 
-        @gdb.connect(config.gdb_executable)
+        if config.env? then process.env = config.env
+        @gdb.connect(config.clientExecutable, config.clientArgs)
         .then =>
             @gdb.set 'confirm', 'off'
         .then =>
-            @gdb.setFile config.path
+            if config.path then @gdb.setFile config.path
         .then =>
-            Promise.all(@gdb.send_cli cmd for cmd in config.gdb_commands)
+            Promise.all(@gdb.send_cli cmd for cmd in config.initCommands)
         .then =>
             if @panelVisible then @panel.show()
             if @cliVisible then @cliPanel.show()
         .then =>
             @gdb.exec.start()
         .catch (err) =>
-            x = atom.notifications.addError 'Error launching GDB',
+            x = atom.notifications.addError 'Error launching PIO Debugger',
                 description: err.toString()
 
     cmdWrap: (cmd) ->
