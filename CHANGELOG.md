@@ -3,7 +3,7 @@
 * Switch to The PlatformIO Unified Debugger
 * Highlight current debug line
 * Add red breakpoint marker
-* Don’t interrupt GDB if process is died
+* Don’t interrupt GDB if process has died
 * Fix GDB start for remote targets
 
 ## 1.0.0 - PlatformIO
