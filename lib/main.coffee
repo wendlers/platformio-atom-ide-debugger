@@ -60,8 +60,10 @@ module.exports = PlatformIOIDEDebugger =
         .then =>
             @gdb.exec.start()
         .catch (err) =>
-            x = atom.notifications.addError 'Error launching PIO Debugger',
+            atom.notifications.addError 'Error launching PIO Debugger',
                 description: err.toString()
+                dismissable: true
+            @stop()
 
     cmdWrap: (cmd) ->
         cmd()
