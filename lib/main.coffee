@@ -5,21 +5,21 @@ StatusView = require './status-view'
 Resizable = require './resizable'
 GdbCliView = require './gdb-cli-view'
 EditorIntegration = require './editor-integration'
+fs = require 'fs'
+
 
 module.exports = PlatformIOIDEDebugger =
     subscriptions: null
     gdb: null
+    projectDir: null
 
     activate: (state) ->
+        @state = state
+        @state.panelVisible ?= true
+
         @provider = new Emitter()
         @provider.stop = @stop.bind this
         @provider.debug = @debug.bind this
-
-        @panelVisible = state.panelVisible
-        @panelVisible ?= true
-        @cliVisible = state.cliVisible
-        @cliSize = state.cliSize
-        @panelSize = state.panelSize
 
     debug: (config) ->
         @gdb = new GDB()
@@ -27,10 +27,10 @@ module.exports = PlatformIOIDEDebugger =
             item: new StatusView(@gdb)
             priority: 1000
         @cliPanel = atom.workspace.addBottomPanel
-            item: new Resizable 'top', @cliSize or 150, new GdbCliView(@gdb)
+            item: new Resizable 'top', @state.cliSize or 150, new GdbCliView(@gdb)
             visible: false
         @panel = atom.workspace.addRightPanel
-            item: new Resizable 'left', @panelSize or 300, new DebugPanelView(@gdb)
+            item: new Resizable 'left', @state.panelSize or 300, new DebugPanelView(@gdb)
             visible: false
 
         @subscriptions = new CompositeDisposable
@@ -47,6 +47,10 @@ module.exports = PlatformIOIDEDebugger =
         @editorIntegration = new EditorIntegration(@gdb)
 
         if config.env? then process.env = config.env
+        @projectDir = config.projectDir
+        if not @projectDir and config.clientArgs.indexOf('--project-dir') > -1
+            @projectDir = config.clientArgs[config.clientArgs.indexOf('--project-dir') + 1]
+
         @gdb.connect(config.clientExecutable, config.clientArgs)
         .then =>
             @gdb.set 'confirm', 'off'
@@ -55,8 +59,12 @@ module.exports = PlatformIOIDEDebugger =
         .then =>
             Promise.all(@gdb.send_cli cmd for cmd in config.initCommands)
         .then =>
-            if @panelVisible then @panel.show()
-            if @cliVisible then @cliPanel.show()
+            if @projectDir and @state.breakpoints?[@projectDir]
+                return Promise.all(
+                    @gdb.breaks.insert location for location in @state.breakpoints[@projectDir])
+        .then =>
+            if @state.panelVisible then @panel.show()
+            if @state.cliVisible then @cliPanel.show()
         .then =>
             @gdb.exec.start()
         .catch (err) =>
@@ -71,25 +79,24 @@ module.exports = PlatformIOIDEDebugger =
                 atom.notifications.addError err.toString()
 
     toggle: (panel, visibleFlag) ->
-      if panel.isVisible()
-        panel.hide()
-      else
-        panel.show()
-      this[visibleFlag] = panel.isVisible()
+        if panel.isVisible()
+            panel.hide()
+        else
+            panel.show()
+        @state[visibleFlag] = panel.isVisible()
 
     stop: ->
-        @panelSize = @panel?.getItem().size()
-        @cliSize = @cliPanel?.getItem().size()
         @editorIntegration?.destroy()
         @panel?.destroy()
         @cliPanel?.destroy()
         @statusBarTile?.destroy()
         @subscriptions?.dispose()
-        if @gdb
-            @gdb.disconnect()
-            @gdb.destroy()
-            @gdb = null
-            @provider.emit 'stop'
+        if not @gdb
+            return
+        @gdb.disconnect()
+        @gdb.destroy()
+        @gdb = null
+        @provider.emit 'stop'
 
     deactivate: ->
         @stop()
@@ -99,11 +106,24 @@ module.exports = PlatformIOIDEDebugger =
     consumeStatusBar: (statusBar) ->
         @statusBar = statusBar
 
+    serializeBreakpoints: ->
+        items = []
+        for id, bkpt of @gdb?.breaks.breaks
+            if bkpt.type.endsWith('breakpoint') and bkpt.disp != 'del'
+                items.push "#{bkpt.file}:#{bkpt.line}"
+        return items
+
     serialize: ->
-        panelVisible: @panelVisible
-        cliVisible: @cliVisible
-        panelSize: @panel?.getItem().size()
-        cliSize: @cliPanel?.getItem().size()
+      if not @gdb
+          return @state
+      @state.panelSize = @panel?.getItem().size()
+      @state.cliSize = @cliPanel?.getItem().size()
+      @state.breakpoints ?= {}
+      if @projectDir
+          @state.breakpoints[@projectDir] = @serializeBreakpoints()
+          for key, value of @state.breakpoints
+              if not fs.existsSync(key) then delete @state.breakpoints[key]
+      return @state
 
     provideDebugger: ->
     		return @provider
