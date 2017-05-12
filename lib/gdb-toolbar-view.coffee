@@ -3,7 +3,7 @@
 module.exports =
 class GdbToolbarView extends View
     @cmdMask:
-        'DISCONNECTED': []
+        'DISCONNECTED': ['disconnect']
         'EXITED': ['disconnect', 'continue']
         'STOPPED': ['disconnect', 'continue', 'next', 'step', 'finish', 'toggle-cli']
         'RUNNING': ['disconnect', 'interrupt', 'toggle-cli']
@@ -22,7 +22,7 @@ class GdbToolbarView extends View
                 @button class: 'btn btn-error icon icon-primitive-square', command: 'disconnect', title: 'Stop / Terminate'
                 @button class: 'btn icon icon-playback-play', command: 'continue', title: 'Resume'
                 @button class: 'btn icon icon-playback-pause', command: 'interrupt', title: 'Suspend'
-                
+
             @div class: 'btn-group', =>
                 @button class: 'btn btn-primary icon icon-move-right', command: 'next', title: 'Step Over'
                 @button class: 'btn btn-primary icon icon-move-down', command: 'step', title: 'Step Into'
