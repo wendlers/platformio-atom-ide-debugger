@@ -29,9 +29,6 @@ class ExecState
 
     start: ->
         @gdb.send_mi '-exec-run'
-        .catch (err) =>
-            if err.toString().indexOf('target does not support "run"') != -1
-                @gdb.send_mi '-exec-continue'
 
     # Resume execution.
     continue: ->
