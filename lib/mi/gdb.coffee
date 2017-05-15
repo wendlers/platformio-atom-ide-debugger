@@ -79,6 +79,11 @@ class GDB
             @exec.interrupt()
         @send_mi '-gdb-exit'
 
+    terminate: ->
+        if not @child? then return
+        @child.stdin '-gdb-exit'
+        setTimeout (-> @child?.kill()), 1000
+
     # @private
     _line_output_handler: (line) ->
         # Handle line buffered output from GDB child process
@@ -168,7 +173,7 @@ class GDB
 
     # Tear down the object and free associated resources.
     destroy: ->
-        @child?.kill()
+        @terminate()
         @breaks.destroy()
         @exec.destroy()
         @vars.destroy()
