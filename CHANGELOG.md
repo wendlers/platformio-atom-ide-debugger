@@ -1,3 +1,9 @@
+## 1.2.0
+
+* Remember project breakpoints
+* Allow to terminate debug session if remote target has been disconnected
+* Improve terminating of GDB and its children
+
 ## 1.1.1
 
 * Destroy debugger on back-end error
