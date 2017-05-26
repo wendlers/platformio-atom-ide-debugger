@@ -53,6 +53,9 @@ module.exports = PlatformIOIDEDebugger =
 
         @gdb.connect(config.clientExecutable, config.clientArgs)
         .then =>
+            if @state.panelVisible then @panel.show()
+            if @state.cliVisible then @cliPanel.show()
+        .then =>
             @gdb.set 'confirm', 'off'
         .then =>
             if config.path then @gdb.setFile config.path
@@ -62,9 +65,6 @@ module.exports = PlatformIOIDEDebugger =
             if @projectDir and @state.breakpoints?[@projectDir]
                 return Promise.all(
                     @gdb.breaks.insert location for location in @state.breakpoints[@projectDir])
-        .then =>
-            if @state.panelVisible then @panel.show()
-            if @state.cliVisible then @cliPanel.show()
         .then =>
             @gdb.exec.start()
         .catch (err) =>

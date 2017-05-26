@@ -3,8 +3,8 @@
 module.exports =
 class GdbToolbarView extends View
     @cmdMask:
-        'DISCONNECTED': ['disconnect']
-        'EXITED': ['disconnect', 'continue']
+        'DISCONNECTED': ['disconnect', 'toggle-cli']
+        'EXITED': ['disconnect', 'continue', 'toggle-cli']
         'STOPPED': ['disconnect', 'continue', 'next', 'step', 'finish', 'toggle-cli']
         'RUNNING': ['disconnect', 'interrupt', 'toggle-cli']
 

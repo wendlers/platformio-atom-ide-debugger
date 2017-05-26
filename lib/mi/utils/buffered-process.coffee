@@ -10,7 +10,11 @@ class BufferedProcess
         new Promise (resolve, reject) =>
             @process = child_process.spawn @command, @args
             @process.stdout.on 'data', (data) => @_stdout(data)
-            @process.stderr.on 'data', (data) => console.error(data)
+            @process.stderr.on 'data', (err) =>
+              atom.notifications.addError 'Error launching PIO Debugging Server',
+                  description: err.toString()
+                  dismissable: true
+              console.error(err.toString())
 
             ok = =>
                 @process.removeListener 'error', error

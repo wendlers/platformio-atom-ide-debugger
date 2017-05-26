@@ -1,3 +1,7 @@
+## 1.2.2
+
+* Improve a debugger startup time
+
 ## 1.2.1
 
 * Show debugging console on error
