@@ -71,7 +71,8 @@ module.exports = PlatformIOIDEDebugger =
             atom.notifications.addError 'Error launching PIO Debugger',
                 description: err.toString()
                 dismissable: true
-            @stop()
+            @panel.show()
+            @cliPanel.show()
 
     cmdWrap: (cmd) ->
         cmd()

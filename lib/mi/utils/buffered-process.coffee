@@ -10,6 +10,7 @@ class BufferedProcess
         new Promise (resolve, reject) =>
             @process = child_process.spawn @command, @args
             @process.stdout.on 'data', (data) => @_stdout(data)
+            @process.stderr.on 'data', (data) => console.error(data)
 
             ok = =>
                 @process.removeListener 'error', error
