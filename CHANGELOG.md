@@ -1,3 +1,7 @@
+## 1.2.3
+
+* Show Debug GUI after initialization process
+
 ## 1.2.2
 
 * Improve a debugger startup time

@@ -53,9 +53,6 @@ module.exports = PlatformIOIDEDebugger =
 
         @gdb.connect(config.clientExecutable, config.clientArgs)
         .then =>
-            if @state.panelVisible then @panel.show()
-            if @state.cliVisible then @cliPanel.show()
-        .then =>
             @gdb.set 'confirm', 'off'
         .then =>
             if config.path then @gdb.setFile config.path
@@ -67,6 +64,9 @@ module.exports = PlatformIOIDEDebugger =
                     @gdb.breaks.insert location for location in @state.breakpoints[@projectDir])
         .then =>
             @gdb.exec.start()
+        .then =>
+            if @state.panelVisible then @panel.show()
+            if @state.cliVisible then @cliPanel.show()            
         .catch (err) =>
             atom.notifications.addError 'Error launching PIO Debugger',
                 description: err.toString()
