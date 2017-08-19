@@ -15,4 +15,4 @@
   'f11': 'platformio-ide-debugger:step'
   'shift-f11': 'platformio-ide-debugger:finish'
 'atom-text-editor':
-  'f9': 'platformio-ide-debugger:toggle-breakpoint'
+  'shift-f9': 'platformio-ide-debugger:toggle-breakpoint'
