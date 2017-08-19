@@ -4,7 +4,7 @@ fs = require 'fs'
 
 posFromMouse = (editor, ev) ->
     screenPosition =
-        editor.editorElement.component.screenPositionForMouseEvent ev
+        editor.element.component.screenPositionForMouseEvent ev
     editor.bufferPositionForScreenPosition screenPosition
 
 cidentFromMouse = (ev) ->
@@ -117,7 +117,7 @@ class EditorIntegration
 
     _hookEditor: (ed) =>
         timeout = null
-        el = ed.editorElement
+        el = ed.element
         hover = (ev) =>
             try
                 cident = cidentFromMouse ev
