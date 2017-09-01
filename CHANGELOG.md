@@ -1,3 +1,7 @@
+## 1.2.4
+
+* Compatibility with Atom 1.19
+
 ## 1.2.3
 
 * Show Debug GUI after initialization process
